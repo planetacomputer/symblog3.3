@@ -13,3 +13,10 @@ blogger_blog_contact:
     defaults: { _controller: BloggerBlogBundle:Page:contact }
     requirements:
         _method:  GET|POST
+
+blogger_blog_blog_show:
+    path:  /{id}
+    defaults: { _controller: BloggerBlogBundle:Blog:show }
+    requirements:
+        _method:  GET
+        id: \d+
