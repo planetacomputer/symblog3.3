@@ -6,7 +6,7 @@ namespace Blogger\BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\BlogRepository")
  * @ORM\Table(name="blog")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -44,6 +44,9 @@ class Blog
      */
     protected $tags;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
+     */
    protected $comments = array();
 
     /**
@@ -58,6 +61,8 @@ class Blog
 
     public function __construct()
     {
+        $this->comments = new ArrayCollection();
+
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
     }
@@ -155,11 +160,21 @@ class Blog
     /**
      * Get blog
      *
-     * @return string
+     * @return string 
      */
-    public function getBlog()
+    public function getBlog($length = null)
     {
-        return $this->blog;
+        if (false === is_null($length) && $length > 0){
+            //Obtenim els $length primers caracters
+            $aux = substr($this->blog, 0, $length);
+            //Darrera posicio d'un punt
+            $lastPos = strrpos($aux, ".");
+            //Retallem fins al darrer punt i afegim punt
+            $aux = substr($aux, 0, $lastPos+1);
+            return $aux;
+        }
+        else
+            return $this->blog;
     }
 
     /**
@@ -254,5 +269,20 @@ class Blog
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Blogger\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Blogger\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 }

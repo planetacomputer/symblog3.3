@@ -10,9 +10,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends Controller
 {
-    public function indexAction()
-    {
-        return $this->render('BloggerBlogBundle:Page:index.html.twig');
+	public function indexAction(){
+ 		$em = $this->getDoctrine()->getManager();
+ 	    //Forma alternativa
+       /* $blogs = $em->createQueryBuilder()
+                    ->select('b')
+                    ->from('BloggerBlogBundle:Blog',  'b')
+                    ->addOrderBy('b.created', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+		*/
+        /*$query = $em->createQuery(
+            'SELECT p
+            FROM BloggerBlogBundle:Blog p
+            ORDER BY p.created DESC'
+        );*/
+        $blogs = $em->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
+        //$blogs = $query->getResult();
+        return $this->render('BloggerBlogBundle:Page:index.html.twig', array('blogs' => $blogs));
     }
 
     public function aboutAction()

@@ -20,3 +20,10 @@ blogger_blog_blog_show:
     requirements:
         _method:  GET
         id: \d+
+
+blogger_blog_comment_create:
+    path:  /comment/{blog_id}
+    defaults: { _controller: BloggerBlogBundle:Comment:create }
+    requirements:
+        _method:  POST
+        blog_id: \d+
