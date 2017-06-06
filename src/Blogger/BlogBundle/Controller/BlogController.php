@@ -14,7 +14,7 @@ class BlogController extends Controller
     /**
      * Muestra una entrada del blog
      */
-    public function showAction($id)
+    public function showAction($id, $slug)
     {
         $em = $this->get('doctrine')->getManager();
         /**
